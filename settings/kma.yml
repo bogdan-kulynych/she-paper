@@ -1,5 +1,6 @@
 ---
 fontsize: 12pt
+
 latex-before-packages-includes:
 - \PassOptionsToPackage{labelfont=bf,labelsep=period,justification=raggedright}{caption}
 - \usepackage{vmargin}
@@ -7,9 +8,12 @@ latex-before-packages-includes:
 - \setmarginsrb{3cm}{2cm}{2cm}{2cm}{0pt}{0mm}{0pt}{13mm}
 - \renewcommand{\baselinestretch}{1.4}
 - \sloppy
+
 latex-after-packages-includes:
 - \usepackage{pdflscape}
 - \makeatletter\renewcommand{\@biblabel}[1]{\quad#1.}\makeatother
+
+# Internationalization
 - \usepackage{fontspec}
 - \usepackage{polyglossia}
 - \setmainlanguage{english}
@@ -17,8 +21,10 @@ latex-after-packages-includes:
 - \newfontfamily\cyrillicfont[Script=Cyrillic]{CMU Serif}
 - \newfontfamily\cyrillicfontsf[Script=Cyrillic]{CMU Sans Serif}
 - \newfontfamily\cyrillicfonttt[Script=Cyrillic]{CMU Typewriter Text}
+
 latex-header-includes:
 - \date{}
+
 biblio-style: alpha
 natbib-options:
 - numbers

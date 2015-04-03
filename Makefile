@@ -4,7 +4,7 @@ TITLEPAGE := title.tex
 
 LATEXC    := lualatex
 LXFLAGS   := -interaction=batchmode
-SDFLAGS   := --natbib --include-before-body=$(TITLEPAGE)
+SDFLAGS   := --natbib
 BIBTEX    := bibtex
 
 SOURCES   := main.md
@@ -23,7 +23,7 @@ html:
 
 latex:
 	@mkdir -p $(BUILDDIR)
-	scholdoc $(SETTINGS) $(SDFLAGS) $(SOURCES) --output=$(BUILDDIR)/$(TARGET).tex
+	scholdoc $(SETTINGS) $(SDFLAGS) $(SOURCES) --include-before-body=$(TITLEPAGE) --output=$(BUILDDIR)/$(TARGET).tex
 
 pdf: latex links
 	@mkdir -p $(BUILDDIR)

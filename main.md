@@ -9,22 +9,22 @@ bibliography: resources/bibliography.bib
 ## Introduction
 
 First-generation FHE schemes:
-\cite{Gen09, DGHV10, BGV11}.
+[@Gen09, DGHV10, BGV11].
 
 Second-generation schemes:
-Improvement of \cite{BGV12} called YASHE \cite{BLLN13}. Improvement of \cite{LTV12} by \cite{FV12}. Details in \cite{LN14}.
-Also, improvement of \cite{DGHV10} in \cite{CLT14}.
+Improvement of [@BGV12] called YASHE [@BLLN13]. Improvement of [@LTV12] by [@FV12]. Details in [@LN14].
+Also, improvement of [@DGHV10] in [@CLT14].
 
-Implementation of \cite{BGV12} with improvements: \cite{GHS12, HS14}.
+Implementation of [@BGV12] with improvements: [@GHS12, HS14].
 
 ## The Original DGHV Scheme
 
-Proposed in \cite{DGHV10}. Various improvements in \cite{CMNT11, CLT13}. Recent enhancement \cite{CLT14}
+Proposed in [@DGHV10]. Various improvements in [@CMNT11, CLT13]. Recent enhancement [@CLT14]
 
 ## Variant DGHV Scheme
 
-Proposed in \cite{YKPB13}.
-Safer parameters suggested in \cite{DC14}
+Proposed in [@YKPB13].
+Safer parameters suggested in [@DC14].
 
 ## Security Analysis
 

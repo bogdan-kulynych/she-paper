@@ -22,6 +22,18 @@ latex-after-packages-includes:
 - \newfontfamily\cyrillicfontsf[Script=Cyrillic]{CMU Sans Serif}
 - \newfontfamily\cyrillicfonttt[Script=Cyrillic]{CMU Typewriter Text}
 
+- \renewcommand{\thesection}{}
+- \renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+- \makeatletter
+# Hack for escaping the hash (#) sign
+# http://stackoverflow.com/a/22483116/1737568
+- >
+  \def\@seccntformat#1{\csname #1ignore\expandafter\endcsname\csname the#1\endcsname\quad}
+- \let\sectionignore\@gobbletwo
+- \let\latex@numberline\numberline
+- \def\numberline#1{\if\relax#1\relax\else\latex@numberline{#1}\fi}
+- \makeatother
+
 latex-header-includes:
 - \date{}
 

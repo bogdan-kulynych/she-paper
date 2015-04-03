@@ -4,7 +4,7 @@ TITLEPAGE := title.tex
 
 LATEXC    := lualatex
 LXFLAGS   := -interaction=batchmode
-SDFLAGS   := --natbib
+SDFLAGS   := --natbib --latex-engine=$(LATEXC)
 BIBTEX    := bibtex
 
 SOURCES   := main.md
@@ -16,17 +16,22 @@ SETTINGS  := settings/kma.yml
 
 all: pdf
 
-html:
-	@mkdir -p $(BUILDDIR)
+html: buildenv
 	scholdoc $(SOURCES) $(SDFLAGS) --citeproc --output=$(BUILDDIR)/$(TARGET).html
 	@firefox $(BUILDDIR)/$(TARGET).html
 
-latex:
+latex: buildenv
+	scholdoc $(SETTINGS) $(SDFLAGS) --include-before-body=$(TITLEPAGE) $(SOURCES) --output=$(BUILDDIR)/$(TARGET).tex
+
+prev: buildenv
+	scholdoc $(SETTINGS) $(SDFLAGS) --include-before-body=$(TITLEPAGE) $(SOURCES) --to=latex --output=$(BUILDDIR)/$(TARGET).pdf
+	@evince $(BUILDDIR)/$(TARGET).pdf &
+
+buildenv: $(BUILDDIR)
+$(BUILDDIR):
 	@mkdir -p $(BUILDDIR)
-	scholdoc $(SETTINGS) $(SDFLAGS) $(SOURCES) --include-before-body=$(TITLEPAGE) --output=$(BUILDDIR)/$(TARGET).tex
 
 pdf: latex links
-	@mkdir -p $(BUILDDIR)
 	@cd $(BUILDDIR) ; \
 	$(LATEXC) $(LXFLAGS) -pdf $(TARGET).tex ; \
 	$(BIBTEX) $(TARGET).aux ; \
@@ -34,10 +39,10 @@ pdf: latex links
 	$(LATEXC) $(LXFLAGS) -pdf $(TARGET).tex
 	@evince $(BUILDDIR)/$(TARGET).pdf &
 
-links:
+links: buildenv
 	@ln -sf $(shell pwd)/$(RESDIR) $(BUILDDIR)
 
 clean:
 	rm -rf $(BUILDDIR)
 
-.PHONY: html latex pdf autopdf clean
+.PHONY: html latex prev pdf autopdf clean

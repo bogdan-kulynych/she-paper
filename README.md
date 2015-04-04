@@ -1,6 +1,6 @@
 ## Prerequisites
 
-Certain settings assume lualatex is used for PDF compiling
+Certain settings assume lualatex is used for PDF generation
 
 ```
 apt-get install lualatex

@@ -36,7 +36,8 @@ latex-after-packages-includes:
 - \makeatother
 
 latex-header-includes:
-biblio-style: alpha
+
+biblio-style: plain
 natbib-options:
 - numbers
 - sort&compress

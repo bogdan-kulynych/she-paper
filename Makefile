@@ -12,7 +12,7 @@ TARGET    := paper
 
 BUILDDIR  := build
 RESDIR    := resources
-SETTINGS  := settings/kma.yml
+SETTINGS  := settings/default.yml
 
 all: pdf
 

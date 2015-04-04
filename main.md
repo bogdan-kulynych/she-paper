@@ -42,7 +42,7 @@ Given a private key ``\mathbf{sk}`` and a ciphertext ``c = \mathsf{Encrypt}_\mat
 Given a public key ``\mathbf{pk}`` and two ciphertexts ``c_1 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_1 \in \{0, 1\} )`` and ``c_2 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_2 \in \{0, 1\} )``, output ciphertext ``c_3 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_1 \oplus m_2 )`` (resp. ``c_3 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_1 \wedge m_2 )``)
 
 
-### Original Somewhat Homomorphic DGHV Scheme
+### The Somewhat Homomorphic DGHV Scheme
 
 ##### Construction
 
@@ -52,19 +52,18 @@ For integers ``z``, ``p`` we denote the reduction of ``z`` modulo ``p`` by ``(z 
 
 ```math
     \mathcal{D}_{\gamma, \rho}(p) = \{
-        \mathrm{choose}~q \leftarrow \mathbb{Z} \cap [0, 2^\gamma / p ), ~
-        \mathrm{choose}~r \leftarrow \mathbb{Z} \cap (-2^\rho, 2^\rho) ~:~
-        \mathrm{output}~x = q p + r \}
+        \mathsf{Choose}~q \leftarrow \mathbb{Z} \cap [0, 2^\gamma / p ), ~
+        \mathsf{Choose}~r \leftarrow \mathbb{Z} \cap (-2^\rho, 2^\rho) ~:~
+        \mathsf{Output}~x = q \cdot p + r \}
 ```
-
 \par
 ``\mathsf{DGHV.KeyGen}( 1^\lambda ).``
 \hangindent=2em
-Randomly choose odd ``\eta``-bit integer ``p`` in ``( 2\mathbb{Z} + 1 ) \cap ( 2^{\eta-1}, 2^\eta )`` as private key. For ``1 \leq i \leq \tau``, sample ``x_i \leftarrow \mathcal{D}_{\gamma, \rho}( p )``. Relabel the ``x_i``’s so that ``x_0`` is the largest. Restart unless ``x_0`` is odd and ``[x_0]_p`` is even. Output ``(\mathbf{pk}, \mathbf{sk})``, where ``\mathbf{pk} = ( x_0, x_1, ..., x_\tau )``, and ``\mathbf{sk} = p``.
+Randomly choose odd ``\eta``-bit integer ``p`` from ``( 2\mathbb{Z} + 1 ) \cap ( 2^{\eta-1}, 2^\eta )`` as private key. For ``1 \leq i \leq \tau``, sample ``x_i \leftarrow \mathcal{D}_{\gamma, \rho}( p )``. Relabel the ``x_i``’s so that ``x_0`` is the largest. Restart unless ``x_0`` is odd and ``[x_0]_p`` is even. Output ``(\mathbf{pk}, \mathbf{sk})``, where ``\mathbf{pk} = ( x_0, x_1, ..., x_\tau )``, and ``\mathbf{sk} = p``.
 
 ``\mathsf{DGHV.Encrypt}( \mathbf{pk}, m \in \{0, 1\} ).``
 \hangindent=2em
-Choose a random subset ``S \subset \{ 1, 2, ..., x_\tau \}`` and a random noise integer ``r`` in ``\mathbb{Z} \cap (-2^{\rho'}, 2^{\rho'})``. Output the ciphertext:
+Choose a random subset ``S \subset \{ 1, 2, ..., x_\tau \}`` and a random noise integer ``r`` from ``\mathbb{Z} \cap (-2^{\rho'}, 2^{\rho'})``. Output the ciphertext:
 ```math
 c = \left[ m + 2r + 2\sum_{i \in S} x_i \right]_{x_0}
 ```
@@ -80,7 +79,7 @@ Output ``[ c_1 + c_2 ]_{x_0}``
 
 ``\mathsf{DGHV.Mult}( \mathbf{pk}, c_1 \in \mathcal{C}, ~ c_2 \in \mathcal{C} ).``
 \hangindent=2em
-Output ``[ c_1 c_2 ]_{x_0}``
+Output ``[ c_1 \cdot c_2 ]_{x_0}``
 
 The scheme can be extended to be fully homomorphic using the bootstrapping technique following the Gentry's approach.
 
@@ -92,12 +91,45 @@ Specific lower bounds that can be found in [@DGHV10] are placed on the parameter
 
 ##### Improvements
 
-The scheme has been improved a number of times since it appeared. Ciphertext compression techniques were proposed in [@CMNT11; @CNT11], the former one achieving public key size of 10.1 MB at the 72-bit security level. A modified scheme featuring batching capabilities allowing for SIMD-style operations was proposed in [@CLT13]. The most recent improvement at the moment of writing is the SIDGHV scale-invariant modification based on the techniques from [@Bra12] with compression and batching capabilities proposed in [@CLT14].
+The scheme has been improved a number of times since it appeared. Public key compression techniques were proposed in [@CMNT11; @CNT11], the former one achieving public key size of 10.1 MB at the 72-bit security level. A modified scheme featuring batching capabilities allowing for SIMD-style operations was proposed in [@CLT13]. The most recent improvement at the moment of writing is the SIDGHV scale-invariant modification based on the techniques from [@Bra12] with compression and batching capabilities proposed in [@CLT14].
 
 
-## Variant DGHV Scheme
+## The Variant of DGHV Somewhat Scheme
 
-Proposed in [@YKPB13] for the purpose of constructing a single-server computational Private Information Retrieval protocol. The protocol was  practical because of a mixing operations feature inherited from DGHV.
+##### Construction
+
+We now describe the variant of DGHV scheme as seen in [@YKPB13]. We denote by ``\gamma`` the bit-length of the public key ``x_0``, ``\eta`` the bit-length of the private key ``p``, and ``\rho`` the bit-length of the noise in the public key and fresh ciphertexts. All of the parameters are polynomial in security parameter ``\lambda``.
+
+``\mathsf{VDGHV.KeyGen}( 1^\lambda ).``
+\hangindent=2em
+Randomly choose odd ``\eta``-bit integer ``p`` from ``( 2\mathbb{Z} + 1 ) \cap ( 2^{\eta-1}, 2^\eta )`` as private key. Randomly choose odd ``q_0`` from ``( 2\mathbb{Z} + 1 ) \cap [1, 2^\gamma/p )``, and set ``x_0 = q_0 p``.
+Output ``(\mathbf{pk}, \mathbf{sk})`` where ``\mathbf{pk} = x_0``, ``\mathbf{sk} = p``.
+
+``\mathsf{VDGHV.Encrypt}( \mathbf{pk}, m \in \{0, 1\} ).``
+\hangindent=2em
+Choose random ``q`` from ``\mathbb{Z} \cap [1, 2^\gamma/p]``, and a random noise integer ``r`` from ``\mathbb{Z} \cap (-2^{\rho}, 2^{\rho})``. Output the ciphertext:
+```math
+c = \left[ q \cdot p + 2r + m \right]_{x_0}
+```
+
+\par
+``\mathsf{VDGHV.Decrypt}( \mathbf{sk}, c \in \mathcal{C} ).``
+\hangindent=2em
+Output ``[ c \mod p ]_2``.
+
+``\mathsf{VDGHV.Add}( \mathbf{pk} , c_1 \in \mathcal{C}, ~ c_2 \in \mathcal{C} ).``
+\hangindent=2em
+Output ``[ c_1 + c_2 ]_{x_0}``
+
+``\mathsf{VDGHV.Mult}( \mathbf{pk}, c_1 \in \mathcal{C}, ~ c_2 \in \mathcal{C} ).``
+\hangindent=2em
+Output ``[ c_1 \cdot c_2 ]_{x_0}``
+
+The difference with the original is scheme is that only the noise-free public key element ``x_0`` is used, while all the other elements ``x_1, x_2, ..., x_\tau`` are set to 0.
+
+##### Motivation
+
+The variant Proposed in [@YKPB13] for the purpose of constructing a single-server computational Private Information Retrieval protocol. The protocol was  practical because of a mixing operations feature inherited from DGHV.
 
 Safer parameters suggested in [@DC14].
 

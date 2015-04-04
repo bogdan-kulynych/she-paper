@@ -94,11 +94,11 @@ Certain constraints accounting for known Approximate-GCD attacks are to be put o
 The scheme has been improved a number of times since it appeared. Public key compression techniques were proposed in [@CMNT11; @CNT11], achieving public key size of 1GB and 10.1 MB respectively at the 72-bit security level. A modified scheme featuring batching capabilities allowing for SIMD-style operations was proposed in [@CLT13]. The most recent improvement at the moment of writing is the SIDGHV scale-invariant modification [@CLT14] based on the techniques from [@Bra12] with compression and batching capabilities.
 
 
-## The Variant of DGHV Somewhat Scheme
+## The Symmetric Variant of DGHV Somewhat Scheme
 
 ##### Construction
 
-We now describe the variant of DGHV scheme with an error-free public key element as given in [@YKPB13]. We denote by ``\gamma`` the bit-length of the public key ``x_0``, ``\eta`` the bit-length of the private key ``p``, and ``\rho`` the bit-length of the noise in the public key and fresh ciphertexts. All of the parameters are polynomial in security parameter ``\lambda``.
+We now describe the symmetric variant of DGHV scheme with an error-free public element as given in [@YKPB13; @CCK13]. We denote by ``\gamma`` the bit-length of the public key ``x_0``, ``\eta`` the bit-length of the private key ``p``, and ``\rho`` the bit-length of the noise in the public key and fresh ciphertexts. All of the parameters are polynomial in security parameter ``\lambda``.
 
 ``\mathsf{VDGHV.KeyGen}( 1^\lambda ).``
 \hangindent=2em
@@ -124,7 +124,7 @@ Output ``[ c_1 + c_2 ]_{x_0}``
 \hangindent=2em
 Output ``[ c_1 \cdot c_2 ]_{x_0}``
 
-The difference with the original scheme is that only the noise-free public key element ``x_0`` is used, while all the other public key elements ``x_1, x_2, ..., x_\tau`` are set to 0.
+The main difference compared to the original is scheme is that only the noise-free public element ``x_0`` is used, while all the other public key elements ``x_1, x_2, ..., x_\tau`` are set to 0.
 
 ##### Security
 
@@ -138,9 +138,9 @@ We propose to use the parameters based on recent results from [@CLT14].
 
 ##### Motivation
 
-The variant was proposed in [@YKPB13] for the purpose of constructing a practical single-server computational Private Information Retrieval protocol. The authors noticed that the generic PIR protocol they outlined didn't require encrypting new integers on the server side, rendering ``x_1, x_2, ..., x_\tau`` public key elements useless. Thus, a variant scheme enables for a significantly lower communication overhead.
+The variant was proposed in [@YKPB13] for the purpose of constructing a practical single-server computational Private Information Retrieval protocol. The authors noticed that the generic PIR protocol they outlined didn't require encrypting new integers on the server side, implying the public key elements ``x_1, x_2, ..., x_\tau`` only used in encryption procedure could be omitted. Obtained symmetric variant produces significantly smaller communication overhead due to the absence of all the public key elements except the error-free element.
 
-An important feature of the VDGHV (and the parent DGHV) scheme that allows to avoid additional encryptions on the server-side is the ability to perform "natural" mixed homomorphic operations on plaintext and ciphertext, since both plaintext and ciphertext spaces are subsets of ``\mathbb{Z}``.
+Never mentioned explicitly in [@YKPB13], the key feature of the VDGHV (and the parent DGHV) scheme that allows to avoid encryptions on the server-side is the ability to perform "natural" mixed homomorphic operations on plaintext and ciphertext, since both plaintext and ciphertext spaces are subsets of ``\mathbb{Z}``:
 
 ``\mathsf{VDGHV.Add( \mathbf{pk}, c \in \mathcal{C}, m \in \{0, 1\} )}.``
 \hangindent=2em

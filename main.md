@@ -81,17 +81,17 @@ Output ``[ c_1 + c_2 ]_{x_0}``
 \hangindent=2em
 Output ``[ c_1 \cdot c_2 ]_{x_0}``
 
-A limited number of homomorphic operations can be performed on ciphertexts, but the scheme can be extended to be fully homomorphic using the bootstrapping technique following the Gentry's approach.
+It was shown in [@DGHV10] that scheme is somewhat homomorphic, i.e. a limited number of homomorphic operations can be performed on ciphertext. Specifically, roughly ``\eta/\rho'`` homomorphic multiplications can be performed in a way that the ciphertext is still correctly decryptable (the ciphertext noise must not exceed ``p``). The scheme can be extended to evaluate arbitrary circuits using the bootstrapping technique following the Gentry's approach [@DGHV10].
 
 ##### Security
 
-The security of the DGHV scheme is based on the (Error-Free) Approximate-GCD problem, that is, given a set of polynomially many samples from ``\mathcal{D}_{\gamma, \rho}(p)`` and ``x_0 = q_0 \cdot p`` for a randomly chosen ``\eta``-bit odd ``p`` and a randomly chosen ``q_0 \in [1, 2^\gamma/p)``, determine ``p``. The scheme is semantically secure if the (Error-Free) Approximate-GCD problem is hard.
+The security of the DGHV scheme is based on the (Error-Free) Approximate-GCD problem (also known as Partial Approximate-GCD [@CNT11]), that is, given a set of polynomially many samples from ``\mathcal{D}_{\gamma, \rho}(p)`` and ``x_0 = q_0 \cdot p`` for a randomly chosen ``\eta``-bit odd ``p`` and a randomly chosen ``q_0 \in [1, 2^\gamma/p)``, determine ``p``. The scheme is semantically secure if the (Error-Free) Approximate-GCD problem is hard.
 
 Certain constraints accounting for known Approximate-GCD attacks are to be put on parameters in order to achieve the ``\lambda``-bit security level. The constraints accounting for latest known attacks can be found in [@CLT14].
 
 ##### Improvements
 
-The scheme has been improved a number of times since it appeared. Public key compression techniques were proposed in [@CMNT11; @CNT11], achieving public key size of 1GB and 10.1 MB respectively at the 72-bit security level. A modified scheme featuring batching capabilities allowing for SIMD-style operations was proposed in [@CLT13]. The most recent improvement at the moment of writing is the SIDGHV scale-invariant modification [@CLT14] based on the techniques from [@Bra12] with compression and batching capabilities.
+The scheme has been improved a number of times since it appeared. Public key compression techniques were introduced in [@CMNT11; @CNT11], achieving public key size of 1GB and 10.1 MB respectively at the 72-bit security level. A modified scheme featuring batching capabilities allowing for SIMD-style operations was proposed in [@CLT13]. The most recent improvement at the moment of writing is the SIDGHV scale-invariant modification [@CLT14] based on the techniques from [@Bra12] with compression and batching capabilities.
 
 
 ## The Symmetric Variant of DGHV Somewhat Scheme
@@ -116,13 +116,13 @@ c = \left[ q \cdot p + 2r + m \right]_{x_0}
 \hangindent=2em
 Output ``[ c \mod p ]_2``.
 
-``\mathsf{SDGHV.Add}( \mathbf{pk}, c \in \mathcal{C}, m \in \{0, 1\} ).``
+``\mathsf{SDGHV.Add}( \mathbf{pk}, c_1 \in \mathcal{C}, c_2 \in \mathcal{C} ).``
 \hangindent=2em
-Output ``[c + m]_{x_0}``.
+Output ``[c_1 + c_2]_{x_0}``.
 
-``\mathsf{SDGHV.Mult}( \mathbf{pk}, c \in \mathcal{C}, m \in \{0, 1\} ).``
+``\mathsf{SDGHV.Mult}( \mathbf{pk}, c_1 \in \mathcal{C}, c_2 \in \mathcal{C} ).``
 \hangindent=2em
-Output ``[c \cdot m]_{x_0}``.
+Output ``[c_1 \cdot c_2]_{x_0}``.
 
 The main difference compared to the original scheme is that only the noise-free public element ``x_0`` is used, while all the other public key elements ``x_1, x_2, ..., x_\tau`` are set to 0. Note the ``\mathsf{SDGHV.Add}`` and ``\mathsf{SDGHV.Mult}`` here are mixed operations that take a ciphertext and a plaintext as input. See the next section for explanation.
 
@@ -130,7 +130,15 @@ The main difference compared to the original scheme is that only the noise-free 
 
 The variant was proposed in [@YKPB13] for the purpose of constructing a practical single-server computational private information retrieval protocol. The authors noticed that the generic PIR protocol they outlined didn't require encrypting new integers on the server side, implying the public key elements ``x_1, x_2, ..., x_\tau`` only used in encryption procedure could be omitted. Obtained symmetric scheme has improved the protocol's communication overhead due to the absence of all of the public key elements except the error-free element, while enabling to efficiently evaluate the server-side PIR retrieval algorithm.
 
-The key feature of the SDGHV scheme that allows to avoid encryptions on the server-side is the ability to perform "natural" mixed homomorphic operations on plaintext and ciphertext, since both plaintext and ciphertext spaces are subsets of ``\mathbb{Z}``.
+The key feature of the SDGHV scheme that allows to avoid encryptions on the server-side is the ability to perform "natural" mixed homomorphic operations on plaintext and ciphertext, since both plaintext and ciphertext spaces are subsets of ``\mathbb{Z}``:
+
+``\mathsf{SDGHV.Add}( \mathbf{pk}, c \in \mathcal{C}, m \in \{0, 1\} ).``
+\hangindent=2em
+Output ``[c + m]_{x_0}``.
+
+``\mathsf{SDGHV.Mult}( \mathbf{pk}, c \in \mathcal{C}, m \in \{0, 1\} ).``
+\hangindent=2em
+Output ``[c \cdot m]_{x_0}``.
 
 Indeed, we can see that the mixed operations are correct, i.e. given the private key ``p``, public key ``x_0``, some messages ``m, m' \in \{ 0, 1 \}``, and a ciphertext ``c = \mathsf{SDGHV.Encrypt}( x_0, m ) = [ q \cdot p + 2r + m ]_{x_0}``
 
@@ -151,7 +159,7 @@ And analogically,
   &= [2 r m' + m \cdot m']_2 \\
   &= m \wedge m'
 ```
-
+We can see the number of homomorhpic additions in the form ``c + m'``, where ``\m \in \{ 0, 1\}``, is limited to ``p - 2r - m``, for a specific ciphertext ``c = [ q \cdot m + 2r + m ]_{x_0}``.
 
 ##### Security
 
@@ -159,18 +167,23 @@ Any instance of the SDGHV scheme is clearly an instance of DGHV scheme as descri
 
 [@DC14] states that the parameters chosen by default in [@YKPB13] might be not secure at the declared level against the latest Approximate-GCD attacks. Alternative parameter constraints are given below.
 
-##### Parameter selection
+<!-- ##### Parameter selection
 
-We propose to use the parameters based on recent results from [@CLT14].
+We propose to use the parameters based on results from [@CCK13].
+
+```math
+\rho &= \Omega( \lambda ) \\
+\eta &\geq \rho \eta( \lambda\log^2\lambda ) \\
+\gamma &\geq \omega( \eta^2 \cdot \log\lambda )
+```
+
+We can take ``\rho = \lambda``, ``\eta = \lambda^2``, ``\gamma = \lambda^5``. -->
 
 ##### Improvements
 
-Public key compression from [@CMNT11; @CNT11], and noise reduction from [@CLT14] don't make sense in SDGHV setting. The CRT batching techniques as described in [@CLT13; @CCK13] can't be applied to SDGHV scheme, since the mixed homomorphic operations correctness would be lost.
-
+Public key compression from [@CMNT11; @CNT11], doesn't make sense in SDGHV setting. The CRT batching techniques as described in [@CLT13; @CCK13] can't be applied to SDGHV scheme, since the mixed homomorphic operations correctness would be lost in such case.
 
 ## Implementation
-
-## Applications
 
 ## Summary
 

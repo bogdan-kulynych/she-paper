@@ -10,6 +10,15 @@ latex-before-packages-includes:
 - \sloppy
 
 latex-after-packages-includes:
+# Theorems
+- \usepackage{amsthm}
+- \theoremstyle{definition}
+- \newtheorem{definition}{Definition}
+
+- \theoremstyle{remark}
+- \newtheorem*{note}{Note}
+
+# Numeration
 - \usepackage{pdflscape}
 - \makeatletter\renewcommand{\@biblabel}[1]{\quad#1.}\makeatother
 

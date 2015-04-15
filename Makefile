@@ -25,7 +25,7 @@ latex: buildenv
 
 prev: buildenv
 	scholdoc $(SETTINGS) $(SDFLAGS) --include-before-body=$(TITLEPAGE) --to=latex --output=$(BUILDDIR)/$(TARGET).pdf $(SOURCES)
-	@evince $(BUILDDIR)/$(TARGET).pdf &
+	@evince $(BUILDDIR)/$(TARGET).pdf 2> /dev/null &
 
 buildenv: $(BUILDDIR)
 $(BUILDDIR):
@@ -37,7 +37,16 @@ pdf: latex links
 	$(BIBTEX) $(TARGET).aux ; \
 	$(LATEXC) $(LXFLAGS) -pdf $(TARGET).tex ; \
 	$(LATEXC) $(LXFLAGS) -pdf $(TARGET).tex
-	@evince $(BUILDDIR)/$(TARGET).pdf &
+	@evince $(BUILDDIR)/$(TARGET).pdf 2> /dev/null &
+
+abstract: links buildenv
+	@cd $(BUILDDIR) ; \
+	cp ../ys-abstract.tex . ; \
+	pdflatex $(LXFLAGS) ys-abstract.tex ; \
+	$(BIBTEX) ys-abstract.aux ; \
+	pdflatex $(LXFLAGS) ys-abstract.tex ; \
+	pdflatex $(LXFLAGS) ys-abstract.tex
+	@evince $(BUILDDIR)/ys-abstract.pdf 2> /dev/null &
 
 links: buildenv
 	@ln -sf $(shell pwd)/$(RESDIR) $(BUILDDIR)

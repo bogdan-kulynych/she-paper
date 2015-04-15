@@ -1,0 +1,85 @@
+%%% ysmp4template.en.tex
+%
+% This is a template file for abstract of the
+%   Fourth Young Scientists' Conference on Mathematics and Physics
+%   April 23-25, 2015
+%   Kyiv, Ukraine
+%	http://matan.kpi.ua/ysmp4conf.html
+%
+% - Rename this file according to authors' last names.
+%
+% - Prepare your abstract using template.
+%
+% - Make sure that LaTeX does not produce any error messages.
+%   Please don't forget to spell-check your document.
+%
+% - Send TeX file to the Conference email address:
+%   ysmp4@matan.kpi.ua
+%	including section number in the subject, for example:
+%	Section 1: abstract Author F.I.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt,reqno]{amsart}
+\usepackage{cmap}\usepackage[T2A]{fontenc}\usepackage[utf8]{inputenc}
+\usepackage[ukrainian,english]{babel}\usepackage{indentfirst,textcase}
+\usepackage[a5paper,text={305pt,530pt},centering]{geometry}
+\usepackage{url}
+
+%%% Put any required packages here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% For example,
+% \usepackage{graphicx}% If you need to include pictures in document
+% \usepackage[intlimits]{amsmath}% Position of limits in integrals
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Theorem-like environments' definitions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem*{theorem*}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem*{corollary*}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem*{proposition*}{Proposition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem*{conjecture*}{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem*{definition*}{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem*{remark*}{Remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Put your local definitions here %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% For example,
+% \newcommand{\R}{\mathbb{R}}
+% \newcommand{\set}[1]{\left\{#1\right\}}
+% \newcommand{\norm}[2][]{\left\lVert#2\right\rVert_{#1}}
+% \DeclareMathOperator{\Prob}{\mathsf{P}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title[Short title]{Symmetric Somewhat Homomorphic Encryption over the Integers}
+\author{Bogdan Kulynych}
+\address{National University of Kyiv-Mohyla Academy\\
+         Kyiv, Ukraine}
+\email{hello [at] bogdankulynych.me}
+\urladdr{http://bogdankulynych.me}% (optional)
+
+\maketitle\thispagestyle{empty}
+
+We describe a symmetric variant of homomomorphic encryption scheme by van Dijk et al.~\cite{DGHV10}, that remains semantically secure under the (error-free) approximate-GCD problem. The scheme allows to perform mixed homomorphic operations on ciphertexts and plaintexts, eliminating the need to encrypt new ciphertexts using the public key in a remote execution setting for some algorithms. Compared to the original scheme, the properties of our variant enable for smaller communication cost for generic secure function evaluation applications, specifically, private information retrieval.
+
+
+%% To prepare bibliography you may use either BibTeX
+%% or `thebibliography` environment.
+
+%% Case 1: Using BibTeX to prepare a bibliography
+\begin{thebibliography}{9}
+\bibitem{DGHV10}
+Marten van Dijk, Craig Gentry, Shai Halevi, and Vinod Vaikuntanathan. Fully Homomorphic Encryption over the Integers. In Henri Gilbert, editor, \emph{EUROCRYPT}, volume 6110 of \emph{Lecture Notes in Computer Science}, pages 24–43. Springer, 2010.
+\end{thebibliography}
+
+\end{document}

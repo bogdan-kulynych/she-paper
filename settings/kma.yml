@@ -1,5 +1,5 @@
 ---
-fontsize: 12pt
+fontsize: 14pt
 
 latex-before-packages-includes:
 - \PassOptionsToPackage{labelfont=bf,labelsep=period,justification=raggedright}{caption}

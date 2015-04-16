@@ -5,7 +5,7 @@ bibliography: resources/bibliography.bib
 \newpage
 
 ##### Abstract
-We describe a symmetric variant of homomomorphic encryption scheme by van Dijk et al. [@DGHV10], semantically secure under the error-free approximate-GCD problem. We also provide the implementation of the scheme as a C/C++ library. The scheme allows to perform "mixed" homomorphic operations on ciphertexts and plaintexts, eliminating the need to encrypt new ciphertexts using the public key for some applications, specifically, in secure function evaluation setting. Compared to the original scheme and other homomorphic encryption schemes, the properties of our variant enable for smaller communication cost for applications like privacy-preserving cloud computing, and private information retrieval.
+We describe a symmetric variant of homomomorphic encryption scheme by van Dijk et al. [@DGHV10], semantically secure under the error-free approximate-GCD problem. We also provide the implementation of the scheme as a C/C++ library. The scheme allows to perform "mixed" homomorphic operations on ciphertexts and plaintexts, eliminating the need to encrypt new ciphertexts using the public key for some applications, specifically, in secure function evaluation setting. Compared to the original scheme and other homomorphic encryption schemes, the properties of the symmetric variant enable for smaller communication cost for applications like privacy-preserving cloud computing, and private information retrieval.
 
 \newpage
 
@@ -16,17 +16,17 @@ Fully homomorphic encryption (FHE) is a special kind of encryption that allows a
 
 While the original scheme was based on ideal lattices [@Gen09], van Dijk et al. proposed a new FHE scheme [@DGHV10] over the integers in 2010. Both these schemes follow Gentry's blueprint to achieve fully homomorphic property. They are known as the _first generation_ FHE.
 
-Both schemes produce similar "noisy" ciphertexts, where noise grows larger as more homomorphic operations are performed on a given ciphertext. When the noise reaches some maximum amount, the ciphertext becomes undecryptable. Following Gentry's approach, one first constructs a _somewhat homomorphic encryption_ scheme, i.e. scheme that is capable of evaluating a limited amount of homomorphic operations before the ciphertext becomes undecryptable. Secondly, one defines _bootstrapping_ procedure that eliminates the noise in ciphertexts (_ciphertext refreshing_). The procedure consists of homomorphic evaluation of the scheme's decryption circuit, which for a given ciphertext results in a different encryption of the same plaintext with reduced noise. Using bootstrapping, arbitrary binary circuits can be evaluated by refreshing the ciphertexts before the noise reaches a threshold. The disadvantage of this approach is that the bootstrapping procedure is very costly to perform.
+The schemes produce similar "noisy" ciphertexts, where noise grows larger as more homomorphic operations are performed on a given ciphertext. When the noise reaches some maximum amount, the ciphertext becomes undecryptable. Following Gentry's approach, one first constructs a _somewhat homomorphic encryption_ scheme, i.e. scheme that is capable of evaluating a limited amount of homomorphic operations before the ciphertext becomes undecryptable. Secondly, one defines _bootstrapping_ procedure that eliminates the noise in ciphertexts (_ciphertext refreshing_). The procedure consists of homomorphic evaluation of the scheme's decryption circuit, which for a given ciphertext results in a different encryption of the same plaintext with reduced noise. Using bootstrapping, arbitrary binary circuits can be evaluated by refreshing the ciphertexts before the noise reaches the threshold. The disadvantage of this approach is that the bootstrapping procedure is very costly to perform.
 
 To avoid bootstrapping, a new technique known as _modulus switching_ was introduced by Brakerski, Gentry, and Vaikuntanathan in 2012 [@BGV12]. They proposed a _leveled_ FHE scheme, i.e. the one in which noise grows linearly with multiplicative depth of the circuit. Such scheme, however, has huge public key storage requirements. In 2012 Brakerski introduced the notion of _scale-invariance_ for _leveled_ FHE schemes [@Bra12] that allows to reduce the storage significantly. This technique was applied to BGV scheme [@BGV12] by Fan and Vercauteren in 2012 [@FV12] resulting in FV scheme, and was used to construct a scheme called YASHE by Bos et al. in 2013 [@BLLN13] based on work from [@LTV12]. The mentioned schemes [@BGV12; @Bra12; @FV12; @BLLN13] as well as improved scheme by Gentry, Sahai, and Waters from 2013 [@GSW13] based on [@Bra12; @BGV12] are known as _second generation_ FHE.
 
 ##### Existing FHE mplementations
 
-One of the practical publicly available implementations of FHE is the C++ library implementing the BGV scheme [@BGV12] with certain improvements [@SV11; @GHS12a] called `helib` [@GHS12b]. There are also less reliable proof-of-concept implementations of the variant of DGHV scheme in Sage [@CNT12], and FV and YASHE in C++ [@LN14].
+One of the practical publicly available implementations of FHE is the C++ library implementing the BGV scheme [@BGV12] with certain improvements [@SV11; @GHS12a] called `helib` [@GHS12b]. There are also experimental implementations of the variant of DGHV scheme in Sage [@CNT12], and FV and YASHE in C++ [@LN14].
 
 ##### Our contributions
 
-In this work we focus on somewhat homomorphic DGHV scheme over the integers [@DGHV10]. We notice that DGHV supports "mixed" homomorphic operations on ciphertexts and plaintexts, which in the context of secure function evaluation allows to eliminate the need for either the client or the remote worker to encrypt all of the inputs of the algorithm, implying symmetric setting. We then describe a symmetric variant of the scheme as seen in [@YKPB13], and provide its usable implementation as a C/C++ library.
+In this work we focus on somewhat homomorphic DGHV scheme over the integers [@DGHV10]. We notice that DGHV supports "mixed" homomorphic operations on ciphertexts and plaintexts, which in the context of secure function evaluation allows to eliminate the need for either the client or the remote worker to encrypt all of the inputs of the algorithm, implying symmetric setting. We then describe a symmetric variant of the DGHV scheme as seen in [@YKPB13], and provide its usable implementation as a C/C++ library.
 
 
 Preliminaries
@@ -34,7 +34,7 @@ Preliminaries
 
 ### Generic Homomorphic Encryption Scheme
 
-Whereas a conventional public-key encryption scheme ``\mathcal{E}``
+Whereas a regular public-key encryption scheme ``\mathcal{E}``
 consists of three algorithms ``\mathsf{KeyGen}_\mathcal{E}``,
 ``\mathsf{Encrypt}_\mathcal{E}``, ``\mathsf{Decrypt}_\mathcal{E}``, a homomorphic encryption
 scheme additionally includes homomorphic operations on ciphertexts that
@@ -56,15 +56,7 @@ security parameter ``\lambda``, output a public and private key pair
 plaintext message ``m \in \{0, 1\}``.
 
 ``\mathsf{Add}_\mathcal{E}( \mathbf{pk} , c_1 \in \mathcal{C}, ~ c_2 \in \mathcal{C} )``
-(resp. ``\mathsf{Mult}_\mathcal{E}``). \hangindent=2em Given a public key
-``\mathbf{pk}`` and two ciphertexts
-``c_1 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_1 \in \{0, 1\} )``
-and
-``c_2 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_2 \in \{0, 1\} )``,
-output ciphertext
-``c_3 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_1 \oplus m_2 )``
-(resp.
-``c_3 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_1 \wedge m_2 )``)
+(resp. ``\mathsf{Mult}_\mathcal{E}``). \hangindent=2em Given a public key ``\mathbf{pk}`` and two ciphertexts ``c_1 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_1 \in \{0, 1\} )`` and ``c_2 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_2 \in \{0, 1\} )``, output ciphertext ``c' \in \mathcal{C}``.
 
 To be homomorphic, a scheme ``\mathcal{E} = ( \mathsf{KeyGen}_\mathcal{E}, \mathsf{Encrypt}_\mathcal{E}, \mathsf{Decrypt}_\mathcal{E}, \mathsf{Add}_\mathcal{E}, \mathsf{Mult}_\mathcal{E} )`` has to be able to correctly evaluate some class of binary circuits.
 
@@ -75,21 +67,13 @@ C( m_1, ..., m_L ) = \mathsf{Decrypt}_{\mathcal{E}}( \mathbf{sk}, \mathsf{Evalua
 ```
 where ``\mathsf{Evaluate}_{\mathcal{E}}`` simply applies ``\mathsf{Add}_\mathcal{E}`` and ``\mathsf{Mult}_\mathcal{E}`` to the ciphertexts at corresponding gates of the circuit ``C``.
 
-**Definition (Homomorphic Scheme)**. We call scheme ``\mathcal{E}`` _(somewhat) homomorphic_ if it is correct for some class of circuits ``\mathcal{C}_\mathcal{E} \ni C``. We call scheme ``\mathcal{E}`` _fully homomorphic_, if it is correct for any circuit ``C``.
+**Definition (Homomorphic Scheme)**. We call scheme ``\mathcal{E}`` _(somewhat) homomorphic_ if it is correct for any circuit ``C \in \mathcal{C}_\mathcal{E}`` for some class of circuits ``\mathcal{C}_\mathcal{E}``. We call scheme ``\mathcal{E}`` _fully homomorphic_, if it is correct for any circuit ``C``.
 
 ### The Somewhat Homomorphic DGHV Scheme
 
 ##### Construction
 
-In this section we recall the DGHV somewhat homomorphic encryption
-scheme over the integers proposed in [@DGHV10], specifically the
-variant with an error-free public key element. Four parameters are
-used to control the number of elements in the public key and the
-bit-length of various integers. We denote by ``\tau`` the number of
-elements in the public key, ``\gamma`` their bit-length, ``\eta`` the
-bit-length of the private key ``p``, and ``\rho`` (resp. ``\rho'``) the
-bit-length of the noise in the public key (resp. fresh ciphertext). All
-of the parameters are polynomial in security parameter ``\lambda``.
+In this section we recall the DGHV somewhat homomorphic encryption scheme over the integers proposed in [@DGHV10], specifically the variant with an error-free public key element. Four parameters are used to control the number of elements in the public key and the bit-length of various integers. We denote by ``\tau`` the number of elements in the public key, ``\gamma`` their bit-length, ``\eta`` the bit-length of the private key ``p``, and ``\rho`` (resp. ``\rho'``) the bit-length of the noise in the public key (resp. fresh ciphertext). All of the parameters are polynomial in security parameter ``\lambda``.
 
 For integers ``z``, ``p`` we denote the reduction of ``z`` modulo ``p`` by
 ``(z \mod p)`` or ``[z]_p``.
@@ -117,13 +101,7 @@ c = \left[ m + 2r + 2\sum_{i \in S} x_i \right]_{x_0}
 ``\mathsf{DGHV.Mult}( \mathbf{pk}, c_1 \in \mathcal{C}, ~ c_2 \in \mathcal{C} ).``
 \hangindent=2em Output ``[ c_1 \cdot c_2 ]_{x_0}``
 
-It was shown in [@DGHV10] that scheme is somewhat homomorphic, i.e. a
-limited number of homomorphic operations can be performed on ciphertext.
-Specifically, roughly ``\eta/\rho'`` homomorphic multiplications can be
-performed in a way that the ciphertext is still correctly decryptable
-(the ciphertext noise must not exceed ``p``). The scheme can be extended
-to evaluate arbitrary circuits using the bootstrapping technique
-following the Gentry's approach [@DGHV10].
+It was shown in [@DGHV10] that scheme is somewhat homomorphic, i.e. a limited number of homomorphic operations can be performed on ciphertext. Specifically, roughly ``\eta/\rho'`` homomorphic multiplications can be performed in a way that the ciphertext is still correctly decryptable (the ciphertext noise must not exceed ``p``). The scheme can be extended to evaluate arbitrary circuits using the bootstrapping technique [@DGHV10].
 
 ##### Semantic security
 
@@ -131,13 +109,13 @@ The security of the DGHV scheme described as above is based on the
 error-free approximate-GCD problem. We use the following distribution over ``\gamma``-bit integers:
 
 ```math
-    \mathcal{D}^{\rho}(p, q_0) = \{
+    \mathcal{D}_{\rho}(p, q_0) = \{
         \mathsf{Choose}~q \leftarrow [0, q_0 ), ~
         \mathsf{Choose}~r \leftarrow (-2^\rho, 2^\rho) ~:~
         \mathsf{Output}~x = q \cdot p + r \}
 ```
 
-**Definition (``(\rho, \eta, \gamma)``-Error-Free Approximate-GCD).** For a random ``\eta``-bit odd integer ``p``, given ``x_0 = q_0 \cdot p``, where ``q_0`` is a random odd integer in ``( 2\mathbb{Z} + 1) \cap [ 0, 2^{ \gamma } / p )``, and polynomially many samples ``x_i`` from ``\mathcal{D}_{\rho} ( p, q_0 )``, output ``p``.
+**Definition (``(\rho, \eta, \gamma)``-Error-Free Approximate-GCD).** For a random ``\eta``-bit odd integer ``p``, given ``x_0 = q_0 \cdot p``, where ``q_0`` is a random odd integer in ``( 2\mathbb{Z} + 1) \cap [ 0, 2^{ \gamma } / p )``, and polynomially many samples from ``\mathcal{D}_{\rho} ( p, q_0 )``, output ``p``.
 
 The scheme is semantically secure if the error-free approximate-GCD problem is hard [@DGHV10]. Certain constraints have to be put on scheme parameters in order to achieve ``\lambda``-bit security.
 
@@ -159,7 +137,7 @@ The Symmetric Variant of DGHV Somewhat Scheme
 ### Construction
 
 We now describe the symmetric variant of DGHV scheme with an error-free
-public element as given in [@YKPB13; @CCK13]. We denote by ``\gamma`` the
+public element as given in [@YKPB13]. We denote by ``\gamma`` the
 bit-length of the public key ``x_0``, ``\eta`` the bit-length of the private
 key ``p``, and ``\rho`` the bit-length of the noise in the public key and
 fresh ciphertexts. All of the parameters are polynomial in security
@@ -229,17 +207,17 @@ The key feature of the SDGHV scheme that allows to avoid encryptions on the serv
 ``\mathsf{SDGHV.Mult}( \mathbf{pk}, c \in \mathcal{C}, m \in \{0, 1\} ).``
 \hangindent=2em Output ``[c \cdot m]_{x_0}``.
 
-Indeed, we can see that the mixed operations are also correct, i.e. given the private key ``p``, public key ``x_0``, some messages ``m, m' \in \{ 0, 1 \}``, and a ciphertext ``c = \mathsf{SDGHV.Encrypt}( x_0, m ) = [ q \cdot p + 2r + m ]_{x_0}``:
+Indeed, we can see that the mixed operations are correct (for a certain number of operations). Given the private key ``p``, public key ``x_0``, some messages ``m, m' \in \{ 0, 1 \}``, and a ciphertext ``c = \mathsf{SDGHV.Encrypt}( x_0, m ) = [ q \cdot p + 2r + m ]_{x_0}``:
 
 ```math
   \mathsf{SDGHV.Decrypt}( p, \mathsf{SDGHV.Add}( x_0, c, m' ) ) &=
                     \mathsf{SDGHV.Decrypt}( p, [c + m']_{x_0} ) \\
   &= \mathsf{SDGHV.Decrypt}( p, [ q \cdot p + 2r + m + m']_{x_0} ) \\
   &= [2r + m + m']_2 \\
-  &= m \oplus m'
+  &= m \oplus m',
 ```
 
-And analogically,
+if ``m + m' + 2r < p``. Analogically,
 
 ```math
   \mathsf{SDGHV.Decrypt}( p, \mathsf{SDGHV.Mult}( x_0, c, m' ) ) &=
@@ -249,7 +227,7 @@ And analogically,
   &= m \wedge m'
 ```
 
-We can see the number of homomorphic additions in the form ``c + m'``, where ``m' \in \{ 0, 1\}``, is limited to ``p - 2r - m`` for a specific ciphertext ``c = [ q \cdot m + 2r + m ]_{x_0}``.
+We can see the number of homomorphic additions in the form ``c + m'``, where ``m' \in \{ 0, 1\}``, is limited to ``p - 2r - m`` for a specific ciphertext ``c = [ q \cdot p + 2r + m ]_{x_0}``.
 
 ##### Notes on applying existing DGHV improvements
 

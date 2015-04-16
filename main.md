@@ -179,12 +179,11 @@ The scheme is clearly somewhat homomorphic, allowing to compute a limited amount
 
 The scheme is a partial case of the original DGHV scheme with ``\tau = 0``, therefore, remains semantically secure if the error-free approximate-GCD problem is hard.
 
-While the brute force attack on the error-free approximate-GCD instance requires ``\mathcal{O}( 2^\rho )`` computation, the best attack to date [@CN12] is able to find solution in ``\mathcal{\tilde{O}}( 2^{\rho/2} )``.
+##### Attacks
 
-Note that the parameters chosen for benchmark in [@YKPB13] are not
-secure at the declared level against current approximate-GCD attacks (as
-also briefly noted in [@DC14]). Secure parameter constraints and a
-proposed parameter set are given below.
+Given error-free ``x_0 = q_0 \cdot p``, 
+
+Note that the parameters chosen for benchmark in [@YKPB13] are not secure at the declared level against current approximate-GCD attacks (as also briefly noted in [@DC14]). Secure parameter constraints and a proposed parameter set are given below.
 
 ### Parameter selection
 

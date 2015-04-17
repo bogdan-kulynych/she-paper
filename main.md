@@ -171,9 +171,9 @@ The scheme is a partial case of the original DGHV scheme with ``\tau = 0``, ther
 
 ##### Attacks
 
-Given error-free public element ``x_0 = q_0 p``, factoring algorithms can be used to find ``p``. [@KLYC13] gives overview of such attacks: elliptic curve factoring method which runs in ``\exp( \mathcal{O}(\eta^{1 / 2}) )``, and the general number field sieve which runs in ``\exp( \mathcal{O}( \gamma^{1 / 3} ) )``. The following constraints must be put: ``\eta \geq \mathcal{O}(\lambda^2)``, ``\gamma \geq \mathcal{O}(\lambda^3)``.
+Given error-free public element ``x_0 = q_0 p``, factoring algorithms can be used to find ``p``. [@KLYC13] gives overview of such attacks: elliptic curve factoring method which runs in ``\exp( \mathcal{O}(\eta^{1 / 2}) )``, and the general number field sieve which runs in ``\exp( \mathcal{O}( \gamma^{1 / 3} ) )``. The following constraints must be used to resist the attacks: ``\eta \geq \mathcal{O}(\lambda^2)``, ``\gamma \geq \mathcal{O}(\lambda^3)``.
 
-Given ``x_0 = q_0 \cdot p`` and set of ``x_i = q_i p + r``, ``1 \leq i \leq n``, Lagrasias algorithm can be used to find ``p`` in ``\mathcal{O}(2^{n / (\eta - \rho)})`` time. This is mitigated by choosing ``\gamma / \eta^2 = \omega(\log \lambda)``. For the case ``i = 1``, the following attacks can also be used: Chen-Nguyen [@CN12] attack running in ``\tilde{\mathcal{O}}(2^{\rho/2})``, mitigated by  requiring ``\rho > \mathcal{O}(\lambda)``, and Howgrave-Grahan [@How01] attack that implies requirement ``\gamma > \eta^2 / \rho `` [@KLYC13].
+Given ``x_0 = q_0 \cdot p`` and set of ``x_i = q_i p + r``, ``1 \leq i \leq n``, Lagrasias algorithm can be used to find ``p`` in ``\mathcal{O}(2^{n / (\eta - \rho)})`` time. This can be resisted by choosing ``\gamma / \eta^2 = \omega(\log \lambda)``. For the case ``i = 1``, the following attacks can also be used: Chen-Nguyen [@CN12] attack running in ``\tilde{\mathcal{O}}(2^{\rho/2})``, resisted by requiring ``\rho > \mathcal{O}(\lambda)``, and Howgrave-Grahan [@How01] attack, resist by requiring ``\gamma > \eta^2 / \rho `` [@KLYC13].
 
 Note that the parameters chosen for benchmark in [@YKPB13] are not secure at the declared level against current approximate-GCD attacks (as also briefly noted in [@DC14]). Secure parameter constraints and a proposed parameter set are given below.
 
@@ -181,10 +181,11 @@ Note that the parameters chosen for benchmark in [@YKPB13] are not secure at the
 
 We propose to use the following parameter constraints:
 
-- ``\rho \geq 2\lambda`` to mitigate the attack in [@CN12]
-- ``\eta``
-- ``\gamma``
+- ``\rho = \tilde{\mathcal{O}}(\lambda)`` to secure against the Chen-Nguyen attack [@CN12].
+- ``\eta = \tilde{\Omega}( \lambda^2 + \rho \cdot L)`` to resist factoring attacks and allow evaluation of ``L`` successive multiplications.
+- ``\gamma = \eta^2 \omega(log \lambda)`` to resist factoring attacks and the Howgrave-Grahan [@How01] attack
 
+A convenient parameter set could be defined as follows: ``\rho = 2\lambda, \eta = \lambda^2 \cdot (L + 1), \gamma = \lambda^5``.
 
 ### Motivation
 

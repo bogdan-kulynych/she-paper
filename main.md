@@ -185,7 +185,7 @@ We propose to use the following parameter constraints:
 - ``\eta = \tilde{\Omega}( \lambda^2 + \rho \cdot L)`` to resist factoring attacks and allow evaluation of ``L`` successive multiplications.
 - ``\gamma = \eta^2 \omega(log \lambda)`` to resist factoring attacks and the Howgrave-Grahan [@How01] attack
 
-A convenient parameter set could be defined as follows: ``\rho = 2\lambda, \eta = \tilde{\mathcal{O}}(\lambda^2 \cdot L), \gamma = \lambda^5 \cdot L^2``.
+A convenient parameter set could be defined as follows: ``\rho = 2\lambda, \eta = \lambda^2 \cdot L, \gamma = \lambda^5 \cdot L^2``.
 
 ### Motivation
 
@@ -228,16 +228,16 @@ Public key compression from [@CMNT11; @CNT12], doesn't make sense in the symmetr
 
 Implementation
 --------------
-The scheme was implementated as a C/C++ library with a C interface. It uses the GNU Multiprecision Package (GMP) for big integer arithmetics. Implementation can be currently found at [@Kul15].
+The scheme was implemented as a C/C++ library with a C interface. It uses the GNU Multiprecision library (GMP) for big integer arithmetics. Implementation can be currently found at [@Kul15].
 
 The core library interface is given below.
 
 - `she_generate_private_key(unsigned int s, unsigned int l)`. Generates and returns a private key object given a security parameter `s` ``= \lambda`` for evaluating circuits of `l` ``= L`` multiplicative depth.
 - `she_generate_public_key(she_private_key_t* sk)`. Generates and returns an object containing a public error-free element ``x_0`` given a private key object.
-- `she_encrypt(she_public_key_t* pk, struct she_private_key_t* sk, BIT_ARRAY* m)`. Returns encrypted array of bits `m` using the public element and a private key.
-- `she_decrypt(she_private_key_t* sk, struct she_ciphertext_t* c)`. Returns decrypted a ciphertext `c` using a private key.
+- `she_encrypt(she_public_key_t* pk, she_private_key_t* sk, BIT_ARRAY* m)`. Returns encrypted ciphertext vector given a plaintext bit array `m`, a public element, and a private key.
+- `she_decrypt(she_private_key_t* sk, she_ciphertext_t* c)`. Returns a decrypted ciphertext, given ciphertext `c`, and a private key.
 - `she_xor(she_public_key_t* pk, she_ciphertext_t** cs, unsigned int n, unsigned m)`. Returns a ciphertext which is a result of element-wise homomorphic addition of `n` ciphertext vectors `cs` each of length `m`,  given a public element object.
-- `she_dot(she_public_key_t* pk, she_ciphertext_t* a, she_plaintext_t* b)`. Returns a ciphertext which is a result of computing a dot product of vectors `a` and `b` homomorphically given a public element object.
+- `she_dot(she_public_key_t* pk, she_ciphertext_t* a, she_plaintext_t* b)`. Returns a ciphertext which is a result of computing a dot product of ciphertext vectors `a` and `b` homomorphically given a public element object.
 
 The library contains unit tests and regression tests written in Python using ctypes library for FFI and nosetests library for testing itself.
 

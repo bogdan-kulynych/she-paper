@@ -34,26 +34,16 @@ Preliminaries
 
 ### Generic Homomorphic Encryption Scheme
 
-Whereas a regular public-key encryption scheme ``\mathcal{E}``
-consists of three algorithms ``\mathsf{KeyGen}_\mathcal{E}``,
-``\mathsf{Encrypt}_\mathcal{E}``, ``\mathsf{Decrypt}_\mathcal{E}``, a homomorphic encryption
+Whereas a regular public-key encryption scheme ``\mathcal{E}`` consists of three algorithms ``\mathsf{KeyGen}_\mathcal{E}``, ``\mathsf{Encrypt}_\mathcal{E}``, ``\mathsf{Decrypt}_\mathcal{E}``, a homomorphic encryption
 scheme additionally includes homomorphic operations on ciphertexts that
 we denote as ``\mathsf{Add}_\mathcal{E}`` and ``\mathsf{Mult}_\mathcal{E}``.
 
-``\mathsf{KeyGen}_\mathcal{E}( 1^\lambda ).`` \hangindent=2em Given a
-security parameter ``\lambda``, output a public and private key pair
-``(\mathbf{pk, sk})``, where ``\mathbf{pk}`` is a public key, and
-``\mathbf{sk}`` is a private key.
+``\mathsf{KeyGen}_\mathcal{E}( 1^\lambda ).`` \hangindent=2em Given a security parameter ``\lambda``, output a public and private key pair ``(\mathbf{pk, sk})``, where ``\mathbf{pk}`` is a public key, and ``\mathbf{sk}`` is a private key.
 
 ``\mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m \in \{0, 1\} ).``
-\hangindent=2em Given a public key ``\mathbf{pk}`` and a plaintext message
-``m \in \{0, 1\}``, output ciphertext ``c \in \mathcal{C}``, where
-``\mathcal{C}`` is ciphertext space.
+\hangindent=2em Given a public key ``\mathbf{pk}`` and a plaintext message ``m \in \{0, 1\}``, output ciphertext ``c \in \mathcal{C}``, where ``\mathcal{C}`` is ciphertext space.
 
-``\mathsf{Decrypt}_\mathcal{E}( \mathbf{sk}, c \in \mathcal{C} ).``
-\hangindent=2em Given a private key ``\mathbf{sk}`` and a ciphertext
-``c = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m )``, output original
-plaintext message ``m \in \{0, 1\}``.
+``\mathsf{Decrypt}_\mathcal{E}( \mathbf{sk}, c \in \mathcal{C} ).`` \hangindent=2em Given a private key ``\mathbf{sk}`` and a ciphertext ``c = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m )``, output original plaintext message ``m \in \{0, 1\}``.
 
 ``\mathsf{Add}_\mathcal{E}( \mathbf{pk} , c_1 \in \mathcal{C}, ~ c_2 \in \mathcal{C} )``
 (resp. ``\mathsf{Mult}_\mathcal{E}``). \hangindent=2em Given a public key ``\mathbf{pk}`` and two ciphertexts ``c_1 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_1 \in \{0, 1\} )`` and ``c_2 = \mathsf{Encrypt}_\mathcal{E}( \mathbf{pk}, m_2 \in \{0, 1\} )``, output ciphertext ``c' \in \mathcal{C}``.

@@ -4,7 +4,7 @@ TITLEPAGE := title.tex
 
 LATEXC    := lualatex
 LXFLAGS   := -interaction=batchmode
-SDFLAGS   := --natbib --latex-engine=$(LATEXC) --toc
+SDFLAGS   := --natbib --latex-engine=$(LATEXC)
 BIBTEX    := bibtex
 
 SOURCES   := main.md
@@ -21,7 +21,7 @@ html: buildenv
 	@firefox $(BUILDDIR)/$(TARGET).html
 
 latex: buildenv
-	scholdoc $(SETTINGS) $(SDFLAGS) --include-before-body=$(TITLEPAGE) --output=$(BUILDDIR)/$(TARGET).tex $(SOURCES)
+	scholdoc $(SETTINGS) $(SDFLAGS) --output=$(BUILDDIR)/$(TARGET).tex $(SOURCES)
 
 prev: buildenv
 	scholdoc $(SETTINGS) $(SDFLAGS) --include-before-body=$(TITLEPAGE) --to=latex --output=$(BUILDDIR)/$(TARGET).pdf $(SOURCES)

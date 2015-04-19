@@ -1,10 +1,13 @@
 ---
 bibliography: resources/bibliography.bib
+title: Symmetric Somewhat Homomorphic Encryption over the Integers
+author: Bogdan Kulynych
+email: hello@bogdankulynych.me
 ---
 
 \newpage
 
-##### Abstract
+## Abstract:
 We describe a symmetric variant of homomomorphic encryption scheme by van Dijk et al. [@DGHV10], semantically secure under the error-free approximate-GCD problem. We also provide the implementation of the scheme as a C/C++ library. The scheme allows to perform "mixed" homomorphic operations on ciphertexts and plaintexts, eliminating the need to encrypt new ciphertexts using the public key for some applications, specifically, in secure function evaluation setting. Compared to the original scheme and other homomorphic encryption schemes, the properties of the symmetric variant enable for smaller communication cost for applications like privacy-preserving cloud computing, and private information retrieval.
 
 \newpage
@@ -26,7 +29,7 @@ One of the practical publicly available implementations of FHE is the C++ librar
 
 ##### Our contributions
 
-In this work we focus on somewhat homomorphic DGHV scheme over the integers [@DGHV10]. We notice that DGHV supports "mixed" homomorphic operations on ciphertexts and plaintexts, which in the context of secure function evaluation allows to eliminate the need for either the client or the remote worker to encrypt all of the inputs of the algorithm, implying symmetric setting. We then describe a symmetric variant of the DGHV scheme as seen in [@YKPB13], and provide its usable implementation as a C/C++ library.
+In this work we focus on somewhat homomorphic DGHV scheme over the integers [@DGHV10]. We notice that DGHV supports "mixed" homomorphic operations on ciphertexts and plaintexts, which in the context of secure function evaluation allows to eliminate the need for either the client or the remote worker to encrypt all of the inputs of the algorithm, implying symmetric setting. We then describe a symmetric variant of the DGHV scheme as seen in [@YKPB13], propose secure parameter constraints, and provide its usable implementation as a C/C++ library.
 
 
 Preliminaries
@@ -185,7 +188,7 @@ We propose to use the following parameter constraints:
 - ``\eta = \tilde{\Omega}( \lambda^2 + \rho \cdot L)`` to resist factoring attacks and allow evaluation of ``L`` successive multiplications.
 - ``\gamma = \eta^2 \omega(log \lambda)`` to resist factoring attacks and the Howgrave-Grahan [@How01] attack
 
-A convenient parameter set could be defined as follows: ``\rho = 2\lambda, \eta = \lambda^2 \cdot L, \gamma = \lambda^5 \cdot L^2``.
+A convenient parameter set could be defined as follows: ``\rho = 2\lambda, \eta = \mathcal{O}(\lambda^2 \cdot L), \gamma = \mathcal{O}(\lambda^5 \cdot L^2)``.
 
 ### Motivation
 
@@ -223,23 +226,7 @@ We can see the number of homomorphic additions in the form ``c + m'``, where ``m
 
 ##### Notes on applying existing DGHV improvements
 
-Public key compression from [@CMNT11; @CNT12], doesn't make sense in the symmetric setting of SDGHV. Batching techniques as described in [@CLT13; @KLYC13; @CCK13] could be be applied to SDGHV scheme, but the mixed homomorphic operations correctness would be lost if CRT batching is used.
-
-
-Implementation
---------------
-The scheme was implemented as a C/C++ library with a C interface. It uses the GNU Multiprecision library (GMP) for big integer arithmetics. Implementation can be currently found at [@Kul15].
-
-The core library interface is given below.
-
-- `she_generate_private_key(unsigned int s, unsigned int l)`. Generates and returns a private key object given a security parameter `s` ``= \lambda`` for evaluating circuits of `l` ``= L`` multiplicative depth.
-- `she_generate_public_key(she_private_key_t* sk)`. Generates and returns an object containing a public error-free element ``x_0`` given a private key object.
-- `she_encrypt(she_public_key_t* pk, she_private_key_t* sk, BIT_ARRAY* m)`. Returns encrypted ciphertext vector given a plaintext bit array `m`, a public element, and a private key.
-- `she_decrypt(she_private_key_t* sk, she_ciphertext_t* c)`. Returns a decrypted ciphertext, given ciphertext `c`, and a private key.
-- `she_xor(she_public_key_t* pk, she_ciphertext_t** cs, unsigned int n, unsigned m)`. Returns a ciphertext which is a result of element-wise homomorphic addition of `n` ciphertext vectors `cs` each of length `m`,  given a public element object.
-- `she_dot(she_public_key_t* pk, she_ciphertext_t* a, she_plaintext_t* b)`. Returns a ciphertext which is a result of computing a dot product of ciphertext vectors `a` and `b` homomorphically given a public element object.
-
-The library contains unit tests and regression tests written in Python using ctypes library for FFI and nosetests library for testing itself.
+Public key compression from [@CMNT11; @CNT12], doesn't make sense in the symmetric setting of SDGHV. Batching techniques as described in [@CLT13; @KLYC13; @CCK13] could be applied to SDGHV scheme, but the mixed homomorphic operations correctness would be lost if CRT batching is used.
 
 
 Conclusion

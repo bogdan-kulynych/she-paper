@@ -257,7 +257,7 @@ Cхеми гомоморфного шифрування першого поко�
 	
 	\node (encrypt) at (0, -5) { $\mathsf{Encrypt}(x_0, a_i)$ };
 	\node (decrypt) at (0, -10) { $\mathsf{Decrypt}(p, \hat y) = y$ };
-	\node (compute) at (25,-7.5) { $f(x_0; \hat a_1, ..., \hat a_n, \hat b_1, ..., \hat b_m) = \hat y$ };
+	\node (compute) at (25,-7.5) { $f(x_0; \hat a_1, ..., \hat a_n, b_1, ..., b_m) = \hat y$ };
 
 	\draw[->] (encrypt) |- (25, -5)-- (compute);
 	\draw[->] (compute) |- (25,-10) -- (decrypt);

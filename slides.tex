@@ -46,6 +46,19 @@
 \end{frame}
 
 
+\begin{frame}{}
+
+\begin{itemize}
+	
+	\item Формалізований опис симетричної схеми гомоморфного шифрування з \cite{YKPB13}
+	\item Коректні обмеження параметрів схеми
+	\item (Анонс) Реалізація схеми на С++
+	
+\end{itemize}
+
+\end{frame}
+
+
 \begin{frame}{Асиметричне шифрування}
 
 Cхема асиметричного шифрування \( \mathcal{E} \):
@@ -105,6 +118,34 @@ Cхема асиметричного \textcolor{blue}{гомоморфного} 
 
 \end{frame}
 
+
+\begin{frame}{Приватне виконання функцій}
+
+\begin{center}
+\begin{tikzpicture}
+	[scale=.2,auto=center,every node/.style={rectangle,fill=blue!20}]
+		
+  	\draw[color=red!50,fill=red!0] (-10,2.5) rectangle (10,-13);
+	\node[rectangle,fill=red!20] (client) at (0,0) {Клієнт};
+	
+  	\draw[color=red!50,fill=red!0] (10,2.5) rectangle (40,-13);
+	\node[rectangle,fill=red!20] (server) at (25,0) {Сервер};
+	
+	\node[rectangle,fill=white,opacity=0.8,text opacity=1] (sent) at (11, -2) { $\hat a_1, ..., \hat a_n; x_0, \mathbf{pk'}$ };
+	\node[rectangle,fill=white,opacity=0.8,text opacity=1] (recv) at (10, -8) { $\hat y$ };
+	
+	\node (encrypt) at (0, -5) { $\mathsf{Encrypt}(x_0, \mathbf{pk'}; a_i)$ };
+	\node (decrypt) at (0, -10) { $\mathsf{Decrypt}(p; \hat y) = y$ };
+	\node (encrypt1) at (25,-5) { $\mathsf{Encrypt}(x_0, \mathbf{pk'}; b_i)$ };
+	\node (compute) at (25,-10) { $f(x_0; \hat a_1, ..., \hat a_n, \hat b_1, ..., \hat b_m) = \hat y$ };
+
+	\draw[->] (encrypt) -- (encrypt1);
+	\draw[->] (encrypt1) -- (compute);
+	\draw[->] (compute) -- (decrypt);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
 
 \begin{frame}{Повне гомоморфне шифрування}
 
@@ -172,8 +213,35 @@ Cхеми гомоморфного шифрування першого поко�
 \end{frame}
 
 
-\begin{frame}{Висновки}
+\begin{frame}{Використання симетричної DGHV}
 
+Було:
+\begin{center}
+\begin{tikzpicture}
+	[scale=.2,auto=center,every node/.style={rectangle,fill=blue!20}]
+		
+  	\draw[color=red!50,fill=red!0] (-10,2.5) rectangle (10,-13);
+	\node[rectangle,fill=red!20] (client) at (0,0) {Клієнт};
+	
+  	\draw[color=red!50,fill=red!0] (10,2.5) rectangle (40,-13);
+	\node[rectangle,fill=red!20] (server) at (25,0) {Сервер};
+	
+	\node[rectangle,fill=white,opacity=0.8,text opacity=1] (sent) at (11, -2) { $\hat a_1, ..., \hat a_n; x_0, \mathbf{pk'}$ };
+	\node[rectangle,fill=white,opacity=0.8,text opacity=1] (recv) at (10, -8) { $\hat y$ };
+	
+	\node (encrypt) at (0, -5) { $\mathsf{Encrypt}(x_0, \mathbf{pk'}; a_i)$ };
+	\node (decrypt) at (0, -10) { $\mathsf{Decrypt}(p; \hat y) = y$ };
+	\node (encrypt1) at (25,-5) { $\mathsf{Encrypt}(x_0, \mathbf{pk'}; b_i)$ };
+	\node (compute) at (25,-10) { $f(x_0; \hat a_1, ..., \hat a_n, \hat b_1, ..., \hat b_m) = \hat y$ };
+
+	\draw[->] (encrypt) -- (encrypt1);
+	\draw[->] (encrypt1) -- (compute);
+	\draw[->] (compute) -- (decrypt);
+\end{tikzpicture}
+\end{center}
+
+
+Стало:
 \begin{center}
 \begin{tikzpicture}
 	[scale=.2,auto=center,every node/.style={rectangle,fill=blue!20}]
@@ -188,14 +256,18 @@ Cхеми гомоморфного шифрування першого поко�
 	\node[rectangle,fill=white,opacity=0.8,text opacity=1] (recv) at (10, -8) { $\hat y$ };
 	
 	\node (encrypt) at (0, -5) { $\mathsf{Encrypt}(x_0, a_i)$ };
-	\node (decrypt) at (0, -10) { $\mathsf{Decrypt}(p, \hat y) = y $ };
-	\node (compute) at (25,-5) { $f(\hat a_1, ..., \hat a_n, b_1, ..., b_m) = \hat y$ };
+	\node (decrypt) at (0, -10) { $\mathsf{Decrypt}(p, \hat y) = y$ };
+	\node (compute) at (25,-7.5) { $f(x_0; \hat a_1, ..., \hat a_n, \hat b_1, ..., \hat b_m) = \hat y$ };
 
-	\draw[->] (encrypt) -- (compute);
+	\draw[->] (encrypt) |- (25, -5)-- (compute);
 	\draw[->] (compute) |- (25,-10) -- (decrypt);
 \end{tikzpicture}
 \end{center}
+
+\end{frame}	
 	
+\begin{frame}{Висновки}
+
 \begin{itemize}
 	\item Виконання змішаних операцій дозволяє не шифрувати \emph{всі} входи функції, що виконується гомоморфно
 	\item Зникає необхідність передавати публічний ключ, що зменшує розмір передаваних даних

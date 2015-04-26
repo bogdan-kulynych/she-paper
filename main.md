@@ -168,9 +168,9 @@ The main difference compared to the original scheme is that only the noise-free 
 
 The scheme is clearly somewhat homomorphic, allowing to compute a limited amount of additions and multiplications. Note the ``\mathsf{SDGHV.Add}`` and ``\mathsf{SDGHV.Mult}`` here can be used as mixed operations that take a ciphertext and a plaintext as input, since both ciphertext space and plaintext space are subsets of ``\mathbb{Z}``. Further explanations will follow.
 
-### Semantic security
+##### Semantic security
 
-The scheme is a partial case of the original DGHV scheme with ``\tau = 0``, therefore, remains semantically secure if the error-free approximate-GCD problem is hard.
+The scheme remains semantically secure if the error-free approximate-GCD problem is hard.
 
 ##### Attacks
 
@@ -226,15 +226,11 @@ We can see the number of homomorphic additions in the form ``c + m'``, where ``m
 
 ##### Notes on applying existing DGHV improvements
 
-Public key compression from [@CMNT11; @CNT12], doesn't make sense in the symmetric setting of SDGHV. Batching techniques as described in [@CLT13; @KLYC13; @CCK13] could be applied to SDGHV scheme, but the mixed homomorphic operations correctness would be lost if CRT batching is used.
+Batching techniques as described in [@CLT13; @KLYC13; @CCK13] could be applied to SDGHV scheme, but the mixed homomorphic operations correctness would be lost if CRT batching were used. Ciphertext compression techniques [@CNT12], was applied in our implementation in order to decrease the bandwidth cost in SFE setting.
 
+### Implementation
 
-Conclusion
-----------
-In this work, we recalled the DGHV somewhat homomorphic encryption scheme [@DGHV10]. We described a symmetric variant of the scheme, and provided its implementation as a C/C++ library.
-
-The variant scheme can be used in remote secure function evaluation applications like privacy-preserving cloud computing, and private information retrieval. Compared to the original scheme and other FHE schemes, it eliminates the computation costs required for encryption of all inputs of the function being securely evaluated, and reduces the communication cost significantly because of the absence of most of the public key elements.
-
+The scheme was implemented as a C++ library using GNU Multiprecision (_GMP_) for big integer arithmetics computations and _Boost_ for testing and serialization. The implementation is publicly available on the Github [@Kul15].
 
 References
 ----------

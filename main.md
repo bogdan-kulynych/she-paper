@@ -226,7 +226,7 @@ We can see the number of homomorphic additions in the form ``c + m'``, where ``m
 
 ##### Notes on applying existing DGHV improvements
 
-Batching techniques as described in [@CLT13; @KLYC13; @CCK13] could be applied to SDGHV scheme, but the mixed homomorphic operations correctness would be lost if CRT batching were used. Ciphertext compression techniques [@CNT12], was applied in our implementation in order to decrease the bandwidth cost in SFE setting.
+Batching techniques as described in [@CLT13; @KLYC13; @CCK13] could be applied to SDGHV scheme, but the mixed homomorphic operations correctness would be lost if CRT batching were used. Ciphertext compression techniques [@CNT12], was applied in our implementation in order to decrease the communication cost in SFE setting.
 
 ### Implementation
 

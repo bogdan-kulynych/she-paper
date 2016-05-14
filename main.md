@@ -1,5 +1,5 @@
 ---
-bibliography: resources/bibliography.bib
+bibliography: bibliography/crypto.bib
 title: Symmetric Somewhat Homomorphic Encryption over the Integers
 author: Bogdan Kulynych
 email: hello@bogdankulynych.me
